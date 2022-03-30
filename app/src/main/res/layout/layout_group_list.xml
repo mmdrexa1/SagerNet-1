@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:background="?colorPrimary"
         android:elevation="4dp"
+        android:textAllCaps="false"
         android:visibility="gone"
         app:tabIndicatorColor="?tabIndicatorColor"
         app:tabIndicatorFullWidth="false"
@@ -25,6 +26,7 @@
         app:tabPaddingStart="16dp"
         app:tabRippleColor="?tabRippleColor"
         app:tabSelectedTextColor="?tabSelectedTextColor"
+        app:tabTextAppearance="@style/TabTextAppearance"
         app:tabTextColor="?tabTextColor"
         app:tabUnboundedRipple="false" />
 

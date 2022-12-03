@@ -154,7 +154,7 @@ fun Project.setupCommon() {
     }
     (android as? ApplicationExtension)?.apply {
         defaultConfig {
-            targetSdk = 32
+            targetSdk = 33
         }
     }
 }

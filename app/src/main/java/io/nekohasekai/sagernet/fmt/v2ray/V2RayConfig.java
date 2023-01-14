@@ -62,15 +62,34 @@ public class V2RayConfig {
 
         public List<StringOrServerObject> servers;
 
+        public List<StringOrFakeDnsObject> fakedns;
+
+        public static class StringOrFakeDnsObject extends JsonOr<String, FakeDnsObject> {
+            public StringOrFakeDnsObject() {
+                super(JsonToken.STRING, JsonToken.BEGIN_OBJECT);
+            }
+        }
+
         public static class ServerObject {
 
             public String address;
             public Integer port;
             public String clientIp;
-            public Boolean skipFallback;
+            public Boolean skipFallback; // deprecated
             public List<String> domains;
             public List<String> expectIPs;
-            public boolean concurrency;
+            public String tag;
+            public String queryStrategy;
+            public String cacheStrategy;
+            public String fallbackStrategy;
+            public String domainMatcher;
+            public List<StringOrFakeDnsObject> fakedns;
+
+            public static class StringOrFakeDnsObject extends JsonOr<String, FakeDnsObject> {
+                public StringOrFakeDnsObject() {
+                    super(JsonToken.STRING, JsonToken.BEGIN_OBJECT);
+                }
+            }
 
         }
 
@@ -81,16 +100,17 @@ public class V2RayConfig {
         }
 
         public String clientIp;
-        public Boolean disableCache;
+        public Boolean disableCache; // deprecated
         public String tag;
         public List<String> domains;
         public List<String> expectIPs;
         public String queryStrategy;
+        public String cacheStrategy;
+        public String fallbackStrategy;
+        public String domainMatcher;
 
-        public Boolean disableFallback;
-        public Boolean disableFallbackIfMatch;
-
-        public Boolean disableExpire;
+        public Boolean disableFallback; // deprecated
+        public Boolean disableFallbackIfMatch; // deprecated
     }
 
     public RoutingObject routing;
@@ -415,7 +435,7 @@ public class V2RayConfig {
         public ProxySettingsObject proxySettings;
         public MuxObject mux;
         public String domainStrategy;
-        public Long fallbackDelayMs;
+        public String targetDomainStrategy; // v2fly/v2ray-core and SagerNet/v2ray-core name conflict
 
         public void init() {
             if (settings != null) {
@@ -476,12 +496,8 @@ public class V2RayConfig {
                     return VLESSOutboundConfigurationObject.class;
                 case "shadowsocks":
                     return ShadowsocksOutboundConfigurationObject.class;
-                case "shadowsocks_sing":
-                    return ShadowsocksSingOutboundConfigurationObject.class;
                 case "trojan":
                     return TrojanOutboundConfigurationObject.class;
-                case "trojan_sing":
-                    return TrojanSingOutboundConfigurationObject.class;
                 case "loopback":
                     return LoopbackOutboundConfigurationObject.class;
                 case "wireguard":
@@ -546,7 +562,6 @@ public class V2RayConfig {
 
         public List<ServerObject> servers;
         public String version;
-        public Boolean uot;
 
         public static class ServerObject {
 
@@ -603,37 +618,13 @@ public class V2RayConfig {
             public String password;
             public Integer level;
             public String email;
-            public Boolean uot;
             public Boolean experimentReducedIvHeadEntropy;
-            public Boolean encryptedProtocolExtension;
 
         }
 
         public String plugin;
         public String pluginOpts;
         public List<String> pluginArgs;
-
-    }
-
-    public static class ShadowsocksSingOutboundConfigurationObject implements OutboundConfigurationObject {
-
-        public String address;
-        public Integer port;
-        public String method;
-        public String password;
-        public String key;
-        public Boolean reducedIvHeadEntropy;
-
-    }
-
-    public static class TrojanSingOutboundConfigurationObject implements OutboundConfigurationObject {
-
-        public String address;
-        public Integer port;
-        public String password;
-        public String serverName;
-        public List<String> nextProtos;
-        public Boolean insecure;
 
     }
 
@@ -653,7 +644,6 @@ public class V2RayConfig {
                 public String id;
                 public String encryption;
                 public Integer level;
-                public String flow;
 
             }
 
@@ -672,7 +662,6 @@ public class V2RayConfig {
             public String password;
             public String email;
             public Integer level;
-            public String flow;
 
         }
 
@@ -730,7 +719,6 @@ public class V2RayConfig {
         public String network;
         public String security;
         public TLSObject tlsSettings;
-        public TLSObject xtlsSettings;
         public TcpObject tcpSettings;
         public KcpObject kcpSettings;
         public WebSocketObject wsSettings;
@@ -883,7 +871,7 @@ public class V2RayConfig {
 
     public Map<String, Object> stats;
 
-    public List<FakeDnsObject> fakedns;
+    public List<FakeDnsObject> fakedns; // deprecated
 
     public static class FakeDnsObject {
 

@@ -114,17 +114,17 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var speedInterval by configurationStore.stringToInt(Key.SPEED_INTERVAL)
 
     // https://github.com/SagerNet/SagerNet/issues/180
-    var remoteDns by configurationStore.stringNotBlack(Key.REMOTE_DNS) { "tls://dns.google" }
-    var directDns by configurationStore.stringNotBlack(Key.DIRECT_DNS) { "tls+local://dot.pub" }
+    var remoteDns by configurationStore.stringNotBlack(Key.REMOTE_DNS) { "tcp://1.1.1.1" }
+    var directDns by configurationStore.stringNotBlack(Key.DIRECT_DNS) { "tcp://223.5.5.5" }
     var useLocalDnsAsDirectDns by configurationStore.boolean(Key.USE_LOCAL_DNS_AS_DIRECT_DNS)
+    var enableFakeDns by configurationStore.boolean(Key.ENABLE_FAKEDNS)
+    var hijackDns by configurationStore.boolean(Key.HIJACK_DNS)
     var hosts by configurationStore.string(Key.DNS_HOSTS)
     var enableDnsRouting by configurationStore.boolean(Key.ENABLE_DNS_ROUTING) { true }
-    var disableDnsExpire by configurationStore.boolean(Key.DISABLE_DNS_EXPIRE)
 
     var securityAdvisory by configurationStore.boolean(Key.SECURITY_ADVISORY) { true }
     var rulesProvider by configurationStore.stringToInt(Key.RULES_PROVIDER)
     var enableLog by configurationStore.boolean(Key.ENABLE_LOG) { BuildConfig.DEBUG }
-    var enablePcap by configurationStore.boolean(Key.ENABLE_PCAP)
     var acquireWakeLock by configurationStore.boolean(Key.ACQUIRE_WAKE_LOCK)
 
     // hopefully hashCode = mHandle doesn't change, currently this is true from KitKat to Nougat
@@ -202,9 +202,6 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var connectionTestURL by configurationStore.string(Key.CONNECTION_TEST_URL) { CONNECTION_TEST_URL }
     var alwaysShowAddress by configurationStore.boolean(Key.ALWAYS_SHOW_ADDRESS)
 
-    var tunImplementation by configurationStore.stringToInt(Key.TUN_IMPLEMENTATION) { TunImplementation.SYSTEM }
-
-    var useUpstreamInterfaceMTU by configurationStore.boolean(Key.USE_UPSTREAM_INTERFACE_MTU) { true }
     var mtu by configurationStore.stringToInt(Key.MTU) { VpnService.DEFAULT_MTU }
 
     var appTrafficStatistics by configurationStore.boolean(Key.APP_TRAFFIC_STATISTICS)
@@ -246,7 +243,6 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var serverALPN by profileCacheStore.string(Key.SERVER_ALPN)
     var serverCertificates by profileCacheStore.string(Key.SERVER_CERTIFICATES)
     var serverPinnedCertificateChain by profileCacheStore.string(Key.SERVER_PINNED_CERTIFICATE_CHAIN)
-    var serverFlow by profileCacheStore.string(Key.SERVER_FLOW)
     var serverQuicSecurity by profileCacheStore.string(Key.SERVER_QUIC_SECURITY)
     var serverWsMaxEarlyData by profileCacheStore.stringToInt(Key.SERVER_WS_MAX_EARLY_DATA)
     var serverWsBrowserForwarding by profileCacheStore.boolean(Key.SERVER_WS_BROWSER_FORWARDING)
@@ -271,7 +267,6 @@ object DataStore : OnPreferenceDataStoreChangeListener {
     var serverInsecureConcurrency by profileCacheStore.stringToInt(Key.SERVER_INSECURE_CONCURRENCY)
     var serverMTU by profileCacheStore.stringToInt(Key.SERVER_MTU)
     var serverReducedIvHeadEntropy by profileCacheStore.boolean(Key.SERVER_REDUCED_IV_HEAD_ENTROPY)
-    var serverUoT by profileCacheStore.boolean(Key.SERVER_UDP_OVER_TCP)
     var serverWithoutBrookProtocol by profileCacheStore.boolean(Key.SERVER_WITHOUT_BROOK_PROTOCOL)
     var serverGrpcMode by profileCacheStore.string(Key.SERVER_GRPC_MODE)
     var serverEncryptedProtocolExtension by profileCacheStore.boolean(Key.SERVER_ENCRYPTED_PROTOCOL_EXTENSION)

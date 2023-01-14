@@ -107,7 +107,7 @@ fun parseV2Ray(link: String): StandardV2RayBean {
                 }
             }
         }
-    } else { // https://github.com/XTLS/Xray-core/issues/91
+    } else {
 
         bean.uuid = url.username
 
@@ -128,18 +128,6 @@ fun parseV2Ray(link: String): StandardV2RayBean {
                 }
                 url.queryParameter("chain")?.let {
                     bean.pinnedPeerCertificateChainSha256 = it
-                }
-            }
-            "xtls" -> {
-                bean.security = "xtls"
-                url.queryParameter("sni")?.let {
-                    bean.sni = it
-                }
-                url.queryParameter("alpn")?.let {
-                    bean.alpn = it
-                }
-                url.queryParameter("flow")?.let {
-                    bean.flow = it
                 }
             }
         }
@@ -445,17 +433,6 @@ fun StandardV2RayBean.toUri(): String {
                 }
                 if (pinnedPeerCertificateChainSha256.isNotBlank()) {
                     builder.addQueryParameter("chain", pinnedPeerCertificateChainSha256)
-                }
-            }
-            "xtls" -> {
-                if (sni.isNotBlank()) {
-                    builder.addQueryParameter("sni", sni)
-                }
-                if (alpn.isNotBlank()) {
-                    builder.addQueryParameter("alpn", alpn)
-                }
-                if (flow.isNotBlank()) {
-                    builder.addQueryParameter("flow", flow)
                 }
             }
         }

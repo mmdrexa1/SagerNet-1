@@ -150,7 +150,8 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
         }
 
         val enableDnsRouting = findPreference<SwitchPreference>(Key.ENABLE_DNS_ROUTING)!!
-        val disableDnsExpire = findPreference<SwitchPreference>(Key.DISABLE_DNS_EXPIRE)!!
+        val enableFakeDns = findPreference<SwitchPreference>(Key.ENABLE_FAKEDNS)!!
+        val hijackDns = findPreference<SwitchPreference>(Key.HIJACK_DNS)!!
 
         val requireTransproxy = findPreference<SwitchPreference>(Key.REQUIRE_TRANSPROXY)!!
         val transproxyPort = findPreference<EditTextPreference>(Key.TRANSPROXY_PORT)!!
@@ -208,10 +209,8 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
             true
         }
 
-        val tunImplementation = findPreference<SimpleMenuPreference>(Key.TUN_IMPLEMENTATION)!!
         val destinationOverride = findPreference<SwitchPreference>(Key.DESTINATION_OVERRIDE)!!
         val resolveDestination = findPreference<SwitchPreference>(Key.RESOLVE_DESTINATION)!!
-        val enablePcap = findPreference<SwitchPreference>(Key.ENABLE_PCAP)!!
         val providerRootCA = findPreference<SimpleMenuPreference>(Key.PROVIDER_ROOT_CA)!!
 
         providerRootCA.setOnPreferenceChangeListener { _, newValue ->
@@ -224,14 +223,6 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
 
         val mtu = findPreference<EditTextPreference>(Key.MTU)!!
         mtu.setOnBindEditTextListener(EditTextPreferenceModifiers.Number)
-        mtu.isEnabled = !DataStore.useUpstreamInterfaceMTU
-
-        val useUpstreamInterfaceMTU = findPreference<SwitchPreference>(Key.USE_UPSTREAM_INTERFACE_MTU)!!
-        useUpstreamInterfaceMTU.setOnPreferenceChangeListener { _, newValue ->
-            mtu.isEnabled = !(newValue as Boolean)
-            needReload()
-            true
-        }
 
         val acquireWakeLock = findPreference<SwitchPreference>(Key.ACQUIRE_WAKE_LOCK)!!
 
@@ -249,9 +240,10 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
 
         remoteDns.onPreferenceChangeListener = reloadListener
         directDns.onPreferenceChangeListener = reloadListener
+        enableFakeDns.onPreferenceChangeListener = reloadListener
+        hijackDns.onPreferenceChangeListener = reloadListener
         dnsHosts.onPreferenceChangeListener = reloadListener
         enableDnsRouting.onPreferenceChangeListener = reloadListener
-        disableDnsExpire.onPreferenceChangeListener = reloadListener
 
         portLocalDns.onPreferenceChangeListener = reloadListener
         ipv6Mode.onPreferenceChangeListener = reloadListener
@@ -264,35 +256,10 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat() {
 
         providerTrojan.onPreferenceChangeListener = reloadListener
         appTrafficStatistics.onPreferenceChangeListener = reloadListener
-        tunImplementation.onPreferenceChangeListener = reloadListener
         destinationOverride.onPreferenceChangeListener = reloadListener
         resolveDestination.onPreferenceChangeListener = reloadListener
         mtu.onPreferenceChangeListener = reloadListener
         acquireWakeLock.onPreferenceChangeListener = reloadListener
-
-        enablePcap.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue as Boolean) {
-                val path = File(
-                    app.getExternalFilesDir(null)?.apply { mkdirs() } ?: app.filesDir,
-                    "pcap"
-                ).absolutePath
-                MaterialAlertDialogBuilder(requireContext()).apply {
-                    setTitle(R.string.pcap)
-                    setMessage(resources.getString(R.string.pcap_notice, path))
-                    setPositiveButton(android.R.string.ok) { _, _ ->
-                        needReload()
-                    }
-                    setNegativeButton(android.R.string.copy) { _, _ ->
-                        SagerNet.trySetPrimaryClip(path)
-                        snackbar(R.string.copy_success).show()
-                    }
-                }.show()
-                if (tunImplementation.value != "${TunImplementation.GVISOR}") {
-                    tunImplementation.value = "${TunImplementation.GVISOR}"
-                }
-            } else needReload()
-            true
-        }
 
     }
 

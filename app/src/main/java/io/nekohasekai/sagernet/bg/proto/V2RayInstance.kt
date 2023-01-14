@@ -328,9 +328,6 @@ abstract class V2RayInstance(
                         if (bean.insecure) {
                             commands.add("--insecure")
                         }
-                        if (bean.uot) {
-                            commands.add("--udpovertcp")
-                        }
 
                         if (bean.password.isNotBlank()) {
                             commands.add("--password")

@@ -32,7 +32,6 @@ import io.nekohasekai.sagernet.utils.DirectBoot
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.runBlocking
 import libcore.ErrorHandler
-import libcore.Libcore
 import libcore.ObservatoryStatusUpdateListener
 import java.io.IOException
 import java.util.*
@@ -77,7 +76,6 @@ class ProxyInstance(profile: ProxyEntity, val service: BaseService.Interface) : 
             }
         }
 
-        Libcore.setCurrentDomainNameSystemQueryInstance(v2rayPoint)
         SagerNet.started = true
     }
 
@@ -166,7 +164,6 @@ class ProxyInstance(profile: ProxyEntity, val service: BaseService.Interface) : 
     }
 
     override fun close() {
-        Libcore.setCurrentDomainNameSystemQueryInstance(null)
         SagerNet.started = false
 
         persistStats()

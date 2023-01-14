@@ -28,9 +28,6 @@ import cn.hutool.core.util.StrUtil;
 import io.nekohasekai.sagernet.fmt.AbstractBean;
 import io.nekohasekai.sagernet.ktx.UUIDsKt;
 
-/**
- * https://github.com/XTLS/Xray-core/issues/91
- */
 public abstract class StandardV2RayBean extends AbstractBean {
 
     /**
@@ -122,7 +119,7 @@ public abstract class StandardV2RayBean extends AbstractBean {
     /**
      * 底层传输安全 security
      * <p>
-     * 设定底层传输所使用的 TLS 类型。当前可选值有 none，tls 和 xtls。
+     * 设定底层传输所使用的 TLS 类型。当前可选值有 none，tls。
      * <p>
      * 省略时默认为 none，但不可以为空字符串。
      */
@@ -162,15 +159,6 @@ public abstract class StandardV2RayBean extends AbstractBean {
     public Boolean allowInsecure;
     public Integer packetEncoding;
 
-    // --------------------------------------- //
-
-    /**
-     * XTLS 的流控方式。可选值为 xtls-rprx-direct、xtls-rprx-splice 等。
-     * <p>
-     * 若使用 XTLS，此项不可省略，否则无此项。此项不可为空字符串。
-     */
-    public String flow;
-
     @Override
     public boolean allowInsecure() {
         return allowInsecure;
@@ -205,7 +193,6 @@ public abstract class StandardV2RayBean extends AbstractBean {
         if (earlyDataHeaderName == null) earlyDataHeaderName = "";
         if (allowInsecure == null) allowInsecure = false;
         if (packetEncoding == null) packetEncoding = PacketAddrType.None_VALUE;
-        if (StrUtil.isBlank(flow)) flow = "";
 
     }
 
@@ -263,12 +250,6 @@ public abstract class StandardV2RayBean extends AbstractBean {
                 output.writeString(certificates);
                 output.writeString(pinnedPeerCertificateChainSha256);
                 output.writeBoolean(allowInsecure);
-                break;
-            }
-            case "xtls": {
-                output.writeString(sni);
-                output.writeString(alpn);
-                output.writeString(flow);
                 break;
             }
         }
@@ -350,10 +331,13 @@ public abstract class StandardV2RayBean extends AbstractBean {
                 }
                 break;
             }
-            case "xtls": {
+            case "none":
+                break;
+            default: {
+                security = "tls"; // for compatibility
                 sni = input.readString();
                 alpn = input.readString();
-                flow = input.readString();
+                input.readString(); // removed param
             }
         }
         if (this instanceof VMessBean && version != 4 && version < 6) {

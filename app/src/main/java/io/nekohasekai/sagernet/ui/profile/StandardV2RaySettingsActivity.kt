@@ -30,6 +30,7 @@ import io.nekohasekai.sagernet.Key
 import io.nekohasekai.sagernet.R
 import io.nekohasekai.sagernet.database.DataStore
 import io.nekohasekai.sagernet.database.preference.EditTextPreferenceModifiers
+import io.nekohasekai.sagernet.fmt.trojan.TrojanBean
 import io.nekohasekai.sagernet.fmt.v2ray.StandardV2RayBean
 import io.nekohasekai.sagernet.fmt.v2ray.VLESSBean
 import io.nekohasekai.sagernet.fmt.v2ray.VMessBean
@@ -45,8 +46,12 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         DataStore.profileName = name
         DataStore.serverAddress = serverAddress
         DataStore.serverPort = serverPort
-        DataStore.serverUserId = uuid
-        DataStore.serverEncryption = encryption
+        if (this is TrojanBean) {
+            DataStore.serverUserId = password
+        } else {
+            DataStore.serverUserId = uuid
+            DataStore.serverEncryption = encryption
+        }
         DataStore.serverNetwork = type
         DataStore.serverHeader = headerType
         DataStore.serverHost = host
@@ -78,8 +83,12 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         name = DataStore.profileName
         serverAddress = DataStore.serverAddress
         serverPort = DataStore.serverPort
-        uuid = DataStore.serverUserId
-        encryption = DataStore.serverEncryption
+        if (this is TrojanBean) {
+            password = DataStore.serverUserId
+        } else {
+            uuid = DataStore.serverUserId
+            encryption = DataStore.serverEncryption
+        }
         type = DataStore.serverNetwork
         headerType = DataStore.serverHeader
         host = DataStore.serverHost
@@ -155,7 +164,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
             if (encryption.value !in vev) {
                 encryption.value = vev[0]
             }
-        } else {
+        } else if (bean is VMessBean) {
             encryption.setEntries(R.array.vmess_encryption_entry)
             encryption.setEntryValues(R.array.vmess_encryption_value)
 
@@ -163,10 +172,15 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
             if (encryption.value !in vev) {
                 encryption.value = "auto"
             }
+        } else {
+            encryption.isVisible = false
         }
 
         findPreference<EditTextPreference>(Key.SERVER_USER_ID)!!.apply {
             summaryProvider = PasswordSummaryProvider
+            if (bean is TrojanBean) {
+                title = resources.getString(R.string.password)
+            }
         }
 
         updateView(network.value)
@@ -182,6 +196,8 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
 
         vmessExperimentsCategory = findPreference(Key.SERVER_VMESS_EXPERIMENTS_CATEGORY)!!
         vmessExperimentsCategory.isVisible = bean is VMessBean
+
+        findPreference<SimpleMenuPreference>(Key.SERVER_PACKET_ENCODING)!!.isVisible = bean !is TrojanBean
     }
 
     val tcpHeadersValue = app.resources.getStringArray(R.array.tcp_headers_value)

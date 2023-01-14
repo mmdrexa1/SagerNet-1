@@ -152,6 +152,7 @@ public abstract class StandardV2RayBean extends AbstractBean {
 
     public String certificates;
     public String pinnedPeerCertificateChainSha256;
+    public String utlsFingerprint;
 
     // --------------------------------------- //
 
@@ -193,12 +194,13 @@ public abstract class StandardV2RayBean extends AbstractBean {
         if (earlyDataHeaderName == null) earlyDataHeaderName = "";
         if (allowInsecure == null) allowInsecure = false;
         if (packetEncoding == null) packetEncoding = PacketAddrType.None_VALUE;
+        if (StrUtil.isBlank(utlsFingerprint)) utlsFingerprint = "";
 
     }
 
     @Override
     public void serialize(ByteBufferOutput output) {
-        output.writeInt(8);
+        output.writeInt(9);
         super.serialize(output);
 
         output.writeString(uuid);
@@ -250,6 +252,7 @@ public abstract class StandardV2RayBean extends AbstractBean {
                 output.writeString(certificates);
                 output.writeString(pinnedPeerCertificateChainSha256);
                 output.writeBoolean(allowInsecure);
+                output.writeString(utlsFingerprint);
                 break;
             }
         }
@@ -328,6 +331,9 @@ public abstract class StandardV2RayBean extends AbstractBean {
                 }
                 if (version >= 3) {
                     allowInsecure = input.readBoolean();
+                }
+                if (version >= 9) {
+                    utlsFingerprint = input.readString();
                 }
                 break;
             }

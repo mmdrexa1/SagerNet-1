@@ -71,6 +71,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         DataStore.serverQuicSecurity = quicSecurity
         DataStore.serverWsMaxEarlyData = wsMaxEarlyData
         DataStore.serverEarlyDataHeaderName = earlyDataHeaderName
+        DataStore.serverUTLSFingerprint = utlsFingerprint
 
         DataStore.serverWsBrowserForwarding = wsUseBrowserForwarder
         DataStore.serverAllowInsecure = allowInsecure
@@ -106,6 +107,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         quicSecurity = DataStore.serverQuicSecurity
         wsMaxEarlyData = DataStore.serverWsMaxEarlyData
         earlyDataHeaderName = DataStore.serverEarlyDataHeaderName
+        utlsFingerprint = DataStore.serverUTLSFingerprint
 
         wsUseBrowserForwarder = DataStore.serverWsBrowserForwarding
         allowInsecure = DataStore.serverAllowInsecure
@@ -126,6 +128,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
     lateinit var certificates: EditTextPreference
     lateinit var pinnedCertificateChain: EditTextPreference
     lateinit var allowInsecure: SwitchPreference
+    lateinit var utlsFingerprint: SimpleMenuPreference
 
     lateinit var wsCategory: PreferenceCategory
     lateinit var vmessExperimentsCategory: PreferenceCategory
@@ -153,6 +156,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         certificates = findPreference(Key.SERVER_CERTIFICATES)!!
         pinnedCertificateChain = findPreference(Key.SERVER_PINNED_CERTIFICATE_CHAIN)!!
         allowInsecure = findPreference(Key.SERVER_ALLOW_INSECURE)!!
+        utlsFingerprint = findPreference(Key.SERVER_UTLS_FINGERPRINT)!!
 
         wsCategory = findPreference(Key.SERVER_WS_CATEGORY)!!
 
@@ -339,6 +343,7 @@ abstract class StandardV2RaySettingsActivity : ProfileSettingsActivity<StandardV
         certificates.isVisible = isTLS
         pinnedCertificateChain.isVisible = isTLS
         allowInsecure.isVisible = isTLS
+        utlsFingerprint.isVisible = isTLS
     }
 
 }

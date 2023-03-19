@@ -94,7 +94,7 @@ fun Project.requireTargetAbi(): String {
 fun Project.setupCommon() {
     android.apply {
         buildToolsVersion = "30.0.3"
-        compileSdk = 31
+        compileSdk = 33
         defaultConfig {
             minSdk = 21
         }
@@ -170,7 +170,7 @@ fun Project.setupKotlinCommon() {
 }
 
 fun Project.setupNdk() {
-    android.ndkVersion = "25.0.8775105"
+    android.ndkVersion = "25.2.9519653"
 }
 
 fun Project.setupNdkLibrary() {

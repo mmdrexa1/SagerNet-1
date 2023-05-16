@@ -5,7 +5,7 @@ on:
 jobs:
   libcore:
     name: Native Build (LibCore)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -42,7 +42,7 @@ jobs:
           ./run lib core
   build:
     name: Gradle Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - libcore
     steps:
@@ -94,4 +94,3 @@ jobs:
         with:
           name: "SHA256-X86 ${{ env.SHA256_X86 }}"
           path: ${{ env.SUM_X86 }}
-

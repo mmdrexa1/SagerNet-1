@@ -21,7 +21,7 @@ on:
 jobs:
   check:
     name: Check Access
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: "Check access"
         uses: "lannonbr/repo-permission-check-action@2.0.2"
@@ -31,7 +31,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   libcore:
     name: Native Build (LibCore)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: check
     steps:
       - name: Checkout
@@ -69,7 +69,7 @@ jobs:
           ./run lib core
   build:
     name: Gradle Build
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - libcore
     steps:
@@ -124,7 +124,7 @@ jobs:
   publish:
     name: Publish Release
     if: github.event.inputs.publish == 'y'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
       - name: Checkout

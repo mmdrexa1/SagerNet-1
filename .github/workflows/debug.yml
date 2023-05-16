@@ -15,7 +15,7 @@ on:
 jobs:
   setup:
     name: Setup
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Cancel previous
         uses: styfle/cancel-workflow-action@0.11.0
@@ -23,7 +23,7 @@ jobs:
           access_token: ${{ github.token }}
   libcore:
     name: Native Build (LibCore)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     steps:
@@ -53,7 +53,7 @@ jobs:
         run: ./run lib core
   trojan-go:
     name: Native Build (Trojan-Go)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     steps:
@@ -77,7 +77,7 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: ./run plugin trojan_go
   naive:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     name: Native Build (NaïveProxy)
@@ -113,7 +113,7 @@ jobs:
           path: sha256sum.txt
   #  pingtunnel:
   #    name: Native Build (PingTunnel)
-  #    runs-on: ubuntu-latest
+  #    runs-on: self-hosted
   #    needs:
   #      - setup
   #    steps:
@@ -138,7 +138,7 @@ jobs:
   #        run: ./run plugin pingtunnel
   relaybaton:
     name: Native Build (RelayBaton)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     steps:
@@ -163,7 +163,7 @@ jobs:
         run: ./run plugin relaybaton
   brook:
     name: Native Build (Brook)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     steps:
@@ -188,7 +188,7 @@ jobs:
         run: ./run plugin brook
   hysteria:
     name: Native Build (Hysteria)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     steps:
@@ -213,7 +213,7 @@ jobs:
         run: ./run plugin hysteria
   mieru:
     name: Native Build (Mieru)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     steps:
@@ -238,7 +238,7 @@ jobs:
         run: ./run plugin mieru
   tuic:
     name: Native Build (TUIC)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - setup
     steps:
@@ -266,7 +266,7 @@ jobs:
         run: ./run plugin tuic
   lint:
     name: Android Lint
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - libcore
     steps:

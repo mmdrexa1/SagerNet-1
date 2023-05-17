@@ -17,7 +17,7 @@ on:
 jobs:
   check:
     name: Check Access
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: "Check access"
         uses: "lannonbr/repo-permission-check-action@2.0.2"
@@ -26,7 +26,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   native:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Native Build (NaïveProxy)
     strategy:
       fail-fast: false
@@ -68,7 +68,7 @@ jobs:
           path: sha256sum.txt
   build:
     name: Gradle Build (NaïveProxy)
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - native
       - check
@@ -142,7 +142,7 @@ jobs:
   publish:
     name: Publish Release
     if: github.event.inputs.publish != 'y'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
       - name: Checkout
@@ -164,7 +164,7 @@ jobs:
   upload:
     name: Upload Release
     if: github.event.inputs.upload != 'y'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs: build
     steps:
       - name: Donwload Artifacts
@@ -194,7 +194,7 @@ jobs:
   play:
     name: Publish to Play Store
     if: github.event.inputs.play != 'y'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     needs:
       - native
       - check
